@@ -29,7 +29,7 @@ class Point {
     }
 
     show(color) {
-        stroke(color);
+        stroke(...color);
         strokeWeight(10);
         point(this.x, this.y);
     }
