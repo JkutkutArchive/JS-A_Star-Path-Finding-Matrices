@@ -13,12 +13,9 @@ function setup() {
 function draw() {
   background(255);
 
-  // network.nextStepA_Star();  
-  aStarIterator.next()
-  console.log("Ready to show the network")
+  aStarIterator.next();
   //draw it
   network.show();
-  console.log("Show")
 }
 
 function mouseClicked() { // if mouse clicked
@@ -28,12 +25,9 @@ function mouseClicked() { // if mouse clicked
     if (mousePos.distTo(p) <= 10) { // If mouse inside the node
       noLoop();
       network.start = p;
-      console.log("preIterator");
-      aStarIterator = network.aStar();
-      console.log("postIterator");
-      draw();
-      break;
+      aStarIterator = network.aStar(); // Restart the algo
+      loop(); // update the screen      
+      return;
     }
   }
-  loop(); // update the screen
 }

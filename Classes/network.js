@@ -27,7 +27,6 @@ class Network {
     }
 
     show() {
-        console.log("start show")
         for(let i = 1, j = 1; i < this.nodes; i++, j++){
             push();
             strokeWeight(1.5);
@@ -40,19 +39,15 @@ class Network {
             pop();
             this.coordP[i].show([0, 0, 0]);
         }
-        console.log("basic grid done")
 
         // Find the path by working backwards
         this.path = [];
         var temp = this.current;
         this.path.push(temp);
-        console.log(temp);
         while (temp != undefined && temp.previous != undefined) {
-            console.log("temp.prev")
             this.path.push(temp.previous);
             temp = temp.previous;
         }
-        console.log("end path creation")
         for (let i = 1; i < this.path.length; i++) {
             this.path[i].show([0, 255, 255]);
             push();
@@ -61,7 +56,6 @@ class Network {
                 line(this.path[i].x, this.path[i].y, this.path[i - 1].x, this.path[i - 1].y);
             pop();
         }
-        console.log("end path show")
         this.start.show([0, 0, 255]);
         this.end.show([255, 0, 0]);
     }
@@ -141,7 +135,6 @@ class Network {
         this.start = undefined;
         this.end = undefined;
 
-
         for (let i = 0; i < this.coordP.length; i++) {
             this.coordP[i] = new Point(this.coordP[i].x, this.coordP[i].y, this.coordP[i].index);
             if (startIndex == this.coordP[i].index) {
@@ -153,7 +146,6 @@ class Network {
         }
         this.openSet.clear();
         this.closedSet.clear();
-        // this.path = [];
 
         this.current = undefined;
         
