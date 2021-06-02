@@ -43,4 +43,13 @@ class Point {
         }
         return neighbors;
     }
+
+    distTo(otherPoint) {
+        if (!otherPoint instanceof Point) {
+            throw new Error("The input must be a Point instance.");
+        }
+        let x = this.x - otherPoint.x;
+        let y = this.y - otherPoint.y;
+        return Math.sqrt(x * x + y * y);
+    }
 }

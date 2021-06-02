@@ -86,7 +86,7 @@ class Network {
             for (let i = 0; i < neighbors.length; i++) {
               let neighbor = neighbors[i];
               if(!this.closedSet.includes(neighbor)){//if valid node
-                let tempG = this.current.g + this.heuristics(neighbor, this.current);
+                let tempG = this.current.g + neighbor.distTo(this.current);
         
                 // Is this a better path than before?
                 let newPath = false;
@@ -104,7 +104,7 @@ class Network {
                 
                 // Yes, it's a better path
                 if (newPath) {
-                  neighbor.h = this.heuristics(neighbor, this.end);
+                  neighbor.h = neighbor.distTo(this.end);
                   neighbor.f = neighbor.g + neighbor.h;
                   neighbor.previous = this.current;
                 }
@@ -134,15 +134,16 @@ class Network {
         for(let i = 0; i < this.nodes;){ // Create points
             let x = Math.floor(random(this.size.w - 100)) + 50;
             let y = Math.floor(random(this.size.h - 100)) + 50;
+            let p = new Point(x, y, i);
             let valid = true;
             for(let j = 0; j < this.coordP.length; j++){ // for each point already created
-                if(this.heuristics({x:x, y:y}, this.coordP[j]) < this.size.w / 50){ // If new point too close
+                if(p.distTo(this.coordP[j]) < this.size.w / 50){ // If new point too close
                     valid = false; // No valid anymore
                     break;
                 }
             }
             if(valid){ // If valid location for a point
-                this.coordP.push(new Point(x, y, i));
+                this.coordP.push(p);
                 i++;
             }
           }
@@ -151,7 +152,7 @@ class Network {
     createCloseRelations() {
         for (let i = 0; i < this.nodes; i++) {
             for (let j = 0; j < this.nodes; j++) {
-                if (this.heuristics(this.coordP[i], this.coordP[j]) < 60) {
+                if (this.coordP[i].distTo(this.coordP[j]) < 60) {
                     this.mapa[i][j] = 1;
                     this.mapa[j][i] = 1;
                 }
@@ -161,9 +162,6 @@ class Network {
 
     // TOOLS
 
-    heuristics(a, b){//dist a to b (heuristitcs)
-        return dist(a.x, a.y, b.x, b.y);
-    }
 
     static printM(matrix){
         let str = " * ";
