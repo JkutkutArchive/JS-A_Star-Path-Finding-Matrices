@@ -102,10 +102,14 @@ function heuristics(a, b){//dist a to b (heuristitcs)
 
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(windowWidth, windowHeight);
+
+  nodes = Math.floor(windowWidth * windowHeight * 0.0002); // Dinamically create the 
+
   background(255);
   
   mapa = makeMatrix(nodes, nodes);
+
   
   for(let i = 0; i < nodes;){//create coord and draw  
     let x = Math.floor(random(width)) % (width - 100) + 50;
