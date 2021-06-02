@@ -27,6 +27,7 @@ class Network {
     }
 
     show() {
+        console.log("start show")
         for(let i = 1, j = 1; i < this.nodes; i++, j++){
             push();
             strokeWeight(1.5);
@@ -39,15 +40,19 @@ class Network {
             pop();
             this.coordP[i].show([0, 0, 0]);
         }
+        console.log("basic grid done")
 
         // Find the path by working backwards
         this.path = [];
         var temp = this.current;
         this.path.push(temp);
-        while (temp.previous) {
+        console.log(temp);
+        while (temp != undefined && temp.previous != undefined) {
+            console.log("temp.prev")
             this.path.push(temp.previous);
             temp = temp.previous;
         }
+        console.log("end path creation")
         for (let i = 1; i < this.path.length; i++) {
             this.path[i].show([0, 255, 255]);
             push();
@@ -56,27 +61,25 @@ class Network {
                 line(this.path[i].x, this.path[i].y, this.path[i - 1].x, this.path[i - 1].y);
             pop();
         }
+        console.log("end path show")
         this.start.show([0, 0, 255]);
         this.end.show([255, 0, 0]);
     }
 
 
-    nextStepA_Star() {
-        if(this.openSet.size > 0){//if still searching
-            let bestPoint = this.openSet.values().next().value;
+    *aStar() {
+        this.networkReset();
+        while (this.openSet.size > 0){ // While still searching
+            let bestPoint;
             for (let p of this.openSet) {
-                if (p.f < bestPoint.f) {
+                if (!bestPoint || p.f < bestPoint.f) {
                     bestPoint = p;
                 }
             }
             this.current = bestPoint;
+            
             if(this.current === this.end){//if current is the end => finish
-                console.log("Done!, there is a way!");
-                for(let p = this.path.length - 1, q = 1; p > 0; p--, q++){
-                    console.log(q + "º (" + this.path[p].x + ", " + this.path[p].y +") -> index: " + this.path[p].index);
-                }
-                noLoop();
-                return;
+                break;
             }
             
             this.openSet.delete(bestPoint);
@@ -114,9 +117,18 @@ class Network {
                     }
                 }
             }
+            yield;
         }
-        else{//if no other way to go
+        
+        if (this.openSet.size == 0) {//if no other way to go
             console.log("Ups, there is no way to go to the end");
+            noLoop();
+        }
+        else {
+            console.log("Done!, there is a way!");
+            for(let p = this.path.length - 1, q = 1; p > 0; p--, q++){
+                console.log(q + "º (" + this.path[p].x + ", " + this.path[p].y +") -> index: " + this.path[p].index);
+            }
             noLoop();
         }
     }
@@ -124,12 +136,24 @@ class Network {
 
     // VARIABLES CREATION and DESTRUCTION
     networkReset() {
-        for (let p of this.coordP) {
-            p = new Point(p.x, p.y, p.index);
+        let startIndex = this.start.index;
+        let endIndex = this.end.index;
+        this.start = undefined;
+        this.end = undefined;
+
+
+        for (let i = 0; i < this.coordP.length; i++) {
+            this.coordP[i] = new Point(this.coordP[i].x, this.coordP[i].y, this.coordP[i].index);
+            if (startIndex == this.coordP[i].index) {
+                this.start = this.coordP[i];
+            }
+            else if (endIndex == this.coordP[i].index) {
+                this.end = this.coordP[i];
+            }
         }
         this.openSet.clear();
         this.closedSet.clear();
-        this.path = [];
+        // this.path = [];
 
         this.current = undefined;
         
