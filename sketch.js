@@ -14,8 +14,8 @@ function draw() {
   background(255);
 
   aStarIterator.next();
-  //draw it
-  network.show();
+  
+  network.show(); // draw it
 }
 
 function mouseClicked() { // if mouse clicked
@@ -23,7 +23,7 @@ function mouseClicked() { // if mouse clicked
 
   for (let p of network.coordP) { // for each node of the network
     if (mousePos.distTo(p) <= 10) { // If mouse inside the node
-      noLoop();
+      // noLoop();
       network.start = p;
       aStarIterator = network.aStar(); // Restart the algo
       loop(); // update the screen      
