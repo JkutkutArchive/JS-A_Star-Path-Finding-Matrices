@@ -48,7 +48,7 @@ class Network {
         }
         for (let i = 1; i < this.path.length; i++) {
             this.path[i].show([0, 255, 255]);
-            strokeWeight(4);
+            strokeWeight(2);
             stroke([0, 255, 255]);
             line(this.path[i].x, this.path[i].y, this.path[i - 1].x, this.path[i - 1].y);
         }
@@ -65,12 +65,12 @@ class Network {
             }
             this.current = this.openSet[indexBestSpot];
             if(this.current === this.end){//if current is the end => finish
-              console.log("Done!, there is a way!");
-              for(let p = this.path.length - 1, q = 1; p > 0; p--, q++){
-                console.log(q + "º (" + this.path[p].x + ", " + this.path[p].y +") -> index: " + this.path[p].index);
-              }
-              noLoop();
-              return;
+                console.log("Done!, there is a way!");
+                for(let p = this.path.length - 1, q = 1; p > 0; p--, q++){
+                    console.log(q + "º (" + this.path[p].x + ", " + this.path[p].y +") -> index: " + this.path[p].index);
+                }
+                noLoop();
+                return;
             }
             
             this.openSet.splice(indexBestSpot, 1); //remove the best from openSet
@@ -78,37 +78,37 @@ class Network {
             
             let neighbors = [];
             for(let i = 0; i < this.nodes; i++){
-              if(this.mapa[this.current.index][i] == 1){
-                neighbors.push(this.coordP[i]);
-              }
+                if(this.mapa[this.current.index][i] == 1){
+                    neighbors.push(this.coordP[i]);
+                }
             }
             
             for (let i = 0; i < neighbors.length; i++) {
-              let neighbor = neighbors[i];
-              if(!this.closedSet.includes(neighbor)){//if valid node
-                let tempG = this.current.g + neighbor.distTo(this.current);
-        
-                // Is this a better path than before?
-                let newPath = false;
-                if (this.openSet.includes(neighbor)) {
-                  if (tempG < neighbor.g) {
-                    neighbor.g = tempG;
-                    newPath = true;
-                  }
-                } 
-                else {
-                  neighbor.g = tempG;
-                  newPath = true;
-                  this.openSet.push(neighbor);
+                let neighbor = neighbors[i];
+                if(!this.closedSet.includes(neighbor)){//if valid node
+                    let tempG = this.current.g + neighbor.distTo(this.current);
+            
+                    // Is this a better path than before?
+                    let newPath = false;
+                    if (this.openSet.includes(neighbor)) {
+                        if (tempG < neighbor.g) {
+                            neighbor.g = tempG;
+                            newPath = true;
+                        }
+                    } 
+                    else {
+                        neighbor.g = tempG;
+                        newPath = true;
+                        this.openSet.push(neighbor);
+                    }
+                    
+                    // Yes, it's a better path
+                    if (newPath) {
+                        neighbor.h = neighbor.distTo(this.end);
+                        neighbor.f = neighbor.g + neighbor.h;
+                        neighbor.previous = this.current;
+                    }
                 }
-                
-                // Yes, it's a better path
-                if (newPath) {
-                  neighbor.h = neighbor.distTo(this.end);
-                  neighbor.f = neighbor.g + neighbor.h;
-                  neighbor.previous = this.current;
-                }
-              }
             }
         }
         else{//if no other way to go
