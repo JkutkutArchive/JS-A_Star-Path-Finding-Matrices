@@ -127,9 +127,11 @@ class Network {
         for (let p of this.coordP) {
             p = new Point(p.x, p.y, p.index);
         }
-        this.openSet = new Set();
-        this.closedSet = new Set();
+        this.openSet.clear();
+        this.closedSet.clear();
+        this.path = [];
 
+        this.current = undefined;
         
         this.openSet.add(this.start); //we start from the begining
     }
