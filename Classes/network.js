@@ -40,6 +40,13 @@ class Network {
             this.coordP[i].show([0, 0, 0]);
         }
 
+        for (let p of this.openSet) {
+            p.show([255, 104, 3]);
+        }
+        for (let p of this.closedSet) {
+            p.show([161, 161, 161]);
+        }
+
         // Find the path by working backwards
         this.path = [];
         var temp = this.current;
