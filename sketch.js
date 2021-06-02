@@ -11,65 +11,6 @@ var path = [];// The road taken
 
 
 //matrix functions
-function oldRelations(){
-  for(let i = 0; i < nodes;){//create random conections
-    let r2 = Math.floor(random(nodes));
-    if(i != r2){
-      mapa[i][r2] = 1;
-      mapa[r2][i] = 1;
-      i++;
-    }
-  }
-  for(let i = 0; i < nodes/5;){//create random conections
-    let r1 = Math.floor(random(nodes));
-    let r2 = Math.floor(random(nodes));
-    if(r1 != r2 && mapa[r1][r2] == 0){
-      mapa[r1][r2] = 1;
-      mapa[r2][r1] = 1;
-      i++;
-    }
-  }
-  start = coordP[0];
-  end = coordP[coordP.length - 1];
-}
-function newRelations(){
-  for(let i = 0; i < nodes; i++){
-    //let bestN = [];
-    //for(let k = 0; k < 3; k++){
-      let h = Math.pow(10, 1000);
-      let index = i;
-      for(let j = 0; j < nodes; j++){
-        let he = heuristics(coordP[i], coordP[j]);
-        //console.log(he < h);
-        if(he < h && i != j){
-          h = he;
-          index = j;
-        }
-      }
-    //}
-    //if(bestN.length > 3){
-      
-    //}
-    mapa[i][index] = 1;
-    mapa[index][i] = 1;
-  }
-  
-  for(let i = 0; i < nodes * 0.8;){//create random conections
-    let r1 = Math.floor(random(nodes));
-    let r2 = Math.floor(random(nodes));
-    if(r1 != r2 && mapa[r1][r2] == 0){
-      mapa[r1][r2] = 1;
-      mapa[r2][r1] = 1;
-      i++;
-    }
-  }
-  
-  
-  
-  start = coordP[0];
-  end = coordP[coordP.length - 1];
-}
-
 function createCloseRelations() {
   for (let i = 0; i < nodes; i++) {
     for (let j = 0; j < nodes; j++) {
@@ -95,6 +36,7 @@ function makeMatrix(w, h){
   }
   return matrix;
 }
+
 function printM(matrix){
   let str = " * ";
   for(let i = 0; i < matrix.length; i++){
@@ -125,12 +67,12 @@ function setup() {
   
   mapa = makeMatrix(nodes, nodes);
   
-  for(let i = 0; i < nodes;){//create points
+  for(let i = 0; i < nodes;){ // Create points
     let x = Math.floor(random(width)) % (width - 100) + 50;
     let y = Math.floor(random(height)) % (height - 100) + 50;
     let valid = true;
     for(let j = 0; j < coordP.length; j++){ // for each point already created
-      if(heuristics({x:x, y:y}, coordP[j]) < width / (nodes*0.2)){ // If new point too close
+      if(heuristics({x:x, y:y}, coordP[j]) < windowWidth / 50){ // If new point too close
         valid = false; // No valid anymore
         break;
       }
@@ -145,7 +87,7 @@ function setup() {
   
   // printM(mapa);
   
-  openSet.push(start);//we start from the begining
+  openSet.push(start); //we start from the begining
 }
 
 function draw() {
