@@ -5,7 +5,7 @@ class Network {
         this.mapa; //with relations
         this.coordP = [];//with Point objects
         
-        this.nodes = Math.floor(canvasWidth * canvasHeight * 0.0005); // Dinamically create the nodes
+        this.nodes = Math.floor(canvasWidth * canvasHeight * 0.00045); // Dinamically create the nodes
         this.resetMapa(); // Mapa is now a this.nodes x this.nodes matrix;
 
         this.createPoints();
@@ -28,6 +28,7 @@ class Network {
 
     show() {
         for(let i = 1, j = 1; i < this.nodes; i++, j++){
+            push();
             strokeWeight(1.5);
             stroke(0);
             for(let k = 0; k < j; k++){
@@ -35,6 +36,7 @@ class Network {
                    line(this.coordP[i].x, this.coordP[i].y, this.coordP[k].x, this.coordP[k].y);
                 }
             }
+            pop();
             this.coordP[i].show([0, 0, 0]);
         }
 
@@ -48,9 +50,11 @@ class Network {
         }
         for (let i = 1; i < this.path.length; i++) {
             this.path[i].show([0, 255, 255]);
-            strokeWeight(2);
-            stroke([0, 255, 255]);
-            line(this.path[i].x, this.path[i].y, this.path[i - 1].x, this.path[i - 1].y);
+            push();
+                strokeWeight(2);
+                stroke([0, 255, 255]);
+                line(this.path[i].x, this.path[i].y, this.path[i - 1].x, this.path[i - 1].y);
+            pop();
         }
         this.start.show([0, 0, 255]);
         this.end.show([255, 0, 0]);
@@ -118,7 +122,17 @@ class Network {
     }
 
 
-    // VARIABLES CREATION
+    // VARIABLES CREATION and DESTRUCTION
+    networkReset() {
+        for (let p of this.coordP) {
+            p = new Point(p.x, p.y, p.index);
+        }
+        this.openSet = new Set();
+        this.closedSet = new Set();
+
+        
+        this.openSet.add(this.start); //we start from the begining
+    }
 
     resetMapa() {
         this.mapa = [];
@@ -131,13 +145,14 @@ class Network {
     }
 
     createPoints() {
+        this.coordP = [];
         for(let i = 0; i < this.nodes;){ // Create points
             let x = Math.floor(random(this.size.w - 100)) + 50;
             let y = Math.floor(random(this.size.h - 100)) + 50;
             let p = new Point(x, y, i);
             let valid = true;
             for(let j = 0; j < this.coordP.length; j++){ // for each point already created
-                if(p.distTo(this.coordP[j]) < this.size.w / 50){ // If new point too close
+                if(p.distTo(this.coordP[j]) < this.size.w / 40){ // If new point too close
                     valid = false; // No valid anymore
                     break;
                 }

@@ -1,6 +1,7 @@
 var network;
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  strokeWeight(0);
 
   network = new Network(windowWidth, windowHeight);
 }

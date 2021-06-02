@@ -29,9 +29,11 @@ class Point {
     }
 
     show(color) {
-        stroke(...color);
-        strokeWeight(10);
-        point(this.x, this.y);
+        push();
+            fill(...color);
+            translate(this.x, this.y);
+            circle(0, 0, 10);
+        pop();
     }
 
     getNeighbors() {
