@@ -15,15 +15,18 @@ class Network {
         this.current;
         this.end;
 
-        this.openSet = [];
-        this.closedSet = [];
+        // this.openSet = [];
+        // this.closedSet = [];
+        this.openSet = new Set();
+        this.closedSet = new Set();
         this.path = [];// The road taken
 
 
 
         this.start = this.coordP[0];
         this.end = this.coordP[this.coordP.length - 1];
-        this.openSet.push(this.start); //we start from the begining
+        // this.openSet.push(this.start); //we start from the begining
+        this.openSet.add(this.start); //we start from the begining
     }
 
     show() {
@@ -58,12 +61,19 @@ class Network {
 
 
     nextStepA_Star() {
-        if(this.openSet.length > 0){//if still searching
-            let indexBestSpot = 0;//search only best spot
-            for(let i = 0; i < this.openSet.length; i++){//get best index
-                indexBestSpot = (this.openSet[i].f < this.openSet[indexBestSpot].f)? i : indexBestSpot;
+        if(this.openSet.size > 0){//if still searching
+            // let indexBestSpot = 0;//search only best spot
+            // for(let i = 0; i < this.openSet.length; i++){//get best index
+            //     indexBestSpot = (this.openSet[i].f < this.openSet[indexBestSpot].f)? i : indexBestSpot;
+            // }
+            let bestPoint = this.openSet.values().next().value;
+            for (let p of this.openSet) {
+                if (p.f < bestPoint.f) {
+                    bestPoint = p;
+                }
             }
-            this.current = this.openSet[indexBestSpot];
+            // this.current = this.openSet[indexBestSpot];
+            this.current = bestPoint;
             if(this.current === this.end){//if current is the end => finish
                 console.log("Done!, there is a way!");
                 for(let p = this.path.length - 1, q = 1; p > 0; p--, q++){
@@ -73,24 +83,30 @@ class Network {
                 return;
             }
             
-            this.openSet.splice(indexBestSpot, 1); //remove the best from openSet
-            this.closedSet.push(this.current); //add it to the closed
+            // this.openSet.splice(indexBestSpot, 1); //remove the best from openSet
+            this.openSet.delete(bestPoint);
+            // this.closedSet.push(this.current); //add it to the closed
+            this.closedSet.add(this.current); //add it to the closed
             
-            let neighbors = [];
+            let neighbors = new Set();
             for(let i = 0; i < this.nodes; i++){
                 if(this.mapa[this.current.index][i] == 1){
-                    neighbors.push(this.coordP[i]);
+                    // neighbors.push(this.coordP[i]);
+                    neighbors.add(this.coordP[i]);
                 }
             }
             
-            for (let i = 0; i < neighbors.length; i++) {
-                let neighbor = neighbors[i];
-                if(!this.closedSet.includes(neighbor)){//if valid node
+            // for (let i = 0; i < neighbors.length; i++) {
+            //     let neighbor = neighbors[i];
+            for (let neighbor of neighbors) {
+                // if(!this.closedSet.includes(neighbor)){//if valid node
+                if(!this.closedSet.has(neighbor)){//if valid node
                     let tempG = this.current.g + neighbor.distTo(this.current);
             
                     // Is this a better path than before?
                     let newPath = false;
-                    if (this.openSet.includes(neighbor)) {
+                    // if (this.openSet.includes(neighbor)) {
+                    if (this.openSet.has(neighbor)) {
                         if (tempG < neighbor.g) {
                             neighbor.g = tempG;
                             newPath = true;
@@ -99,7 +115,8 @@ class Network {
                     else {
                         neighbor.g = tempG;
                         newPath = true;
-                        this.openSet.push(neighbor);
+                        // this.openSet.push(neighbor);
+                        this.openSet.add(neighbor);
                     }
                     
                     // Yes, it's a better path
@@ -160,8 +177,8 @@ class Network {
         }
     }
 
+    
     // TOOLS
-
 
     static printM(matrix){
         let str = " * ";
