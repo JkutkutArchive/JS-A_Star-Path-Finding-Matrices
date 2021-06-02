@@ -5,9 +5,9 @@ class Point {
         this.index = index;
 
         // A* variables
-        this.h;
-        this.g;
-        this.f;
+        this.h; // distance to end node
+        this.g; // cost from start to this point
+        this.f; // final cost to the end
         this.previous = undefined;
     }
 

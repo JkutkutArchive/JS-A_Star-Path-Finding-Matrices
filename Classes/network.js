@@ -98,9 +98,9 @@ class Network {
                     let tempG = this.current.g + neighbor.distTo(this.current);
             
                     let newPath = false;
-                    if (this.openSet.has(neighbor)) {
-                        if (tempG < neighbor.g) {
-                            neighbor.g = tempG;
+                    if (this.openSet.has(neighbor)) { // if already on consideration
+                        if (tempG < neighbor.g) { // if better way to go to this node
+                            neighbor.g = tempG; // update cost to get to node
                             newPath = true;
                         }
                     } 
@@ -110,7 +110,6 @@ class Network {
                         this.openSet.add(neighbor);
                     }
                     
-                    // Yes, it's a better path
                     if (newPath) {
                         neighbor.h = neighbor.distTo(this.end);
                         neighbor.f = neighbor.g + neighbor.h;
@@ -151,6 +150,9 @@ class Network {
                 this.end = this.coordP[i];
             }
         }
+
+        this.start.g = 0;
+
         this.openSet.clear();
         this.closedSet.clear();
 
