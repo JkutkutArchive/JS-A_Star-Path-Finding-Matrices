@@ -70,6 +70,21 @@ function newRelations(){
   end = coordP[coordP.length - 1];
 }
 
+function createCloseRelations() {
+  for (let i = 0; i < nodes; i++) {
+    for (let j = 0; j < nodes; j++) {
+      if (heuristics(coordP[i], coordP[j]) < 60) {
+        mapa[i][j] = 1;
+        mapa[j][i] = 1;
+      }
+    }
+  }
+
+  start = coordP[0];
+  end = coordP[coordP.length - 1];
+}
+
+
 function makeMatrix(w, h){
   let matrix = [];
   for(let i = 0; i < w; i++){
@@ -104,34 +119,31 @@ function heuristics(a, b){//dist a to b (heuristitcs)
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  nodes = Math.floor(windowWidth * windowHeight * 0.0002); // Dinamically create the 
+  nodes = Math.floor(windowWidth * windowHeight * 0.0005); // Dinamically create the 
 
   background(255);
   
   mapa = makeMatrix(nodes, nodes);
-
   
-  for(let i = 0; i < nodes;){//create coord and draw  
+  for(let i = 0; i < nodes;){//create points
     let x = Math.floor(random(width)) % (width - 100) + 50;
     let y = Math.floor(random(height)) % (height - 100) + 50;
     let valid = true;
-    for(let j = 0; j < coordP.length; j++){
-      if(heuristics({x:x, y:y}, coordP[j]) < width / (nodes*0.4)){
-        valid = false;
+    for(let j = 0; j < coordP.length; j++){ // for each point already created
+      if(heuristics({x:x, y:y}, coordP[j]) < width / (nodes*0.2)){ // If new point too close
+        valid = false; // No valid anymore
         break;
       }
     }
-    if(valid){
+    if(valid){ // If valid location for a point
       coordP.push(new Point(x, y, i));
-      i++;//noFill();
-      //circle(coordP[i].x, coordP[i].y, 300);
-      //circle(coordP[i].x, coordP[i].y, 50);
+      i++;
     }
   }
-  //oldRelations();
-  newRelations();
   
-  //printM(mapa);
+  createCloseRelations();
+  
+  // printM(mapa);
   
   openSet.push(start);//we start from the begining
 }
