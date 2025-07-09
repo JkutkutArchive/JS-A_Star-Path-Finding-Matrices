@@ -1,4 +1,6 @@
 class Network {
+  static PADDING = 50;
+
   constructor(canvasWidth, canvasHeight) {
     this.size = { w: canvasWidth, h: canvasHeight };
 
@@ -187,6 +189,10 @@ class Network {
     }
   }
 
+  twoPointsTooClose(p1, p2) {
+    return p1.distTo(p2) < 40;
+  }
+
   createPoints() {
     this.coordP = [];
     let i, consecutiveInvalids;
@@ -195,12 +201,12 @@ class Network {
       i < this.nodes && consecutiveInvalids < this.nodes;
     ) {
       // Create points
-      let x = Math.floor(random(this.size.w - 100)) + 50;
-      let y = Math.floor(random(this.size.h - 100)) + 50;
+      let x = Math.floor(random(this.size.w - Network.PADDING * 2)) + Network.PADDING;
+      let y = Math.floor(random(this.size.h - Network.PADDING * 2)) + Network.PADDING;
       let p = new Point(x, y, i);
       let valid = true;
       for (let j = 0; j < this.coordP.length; j++) { // for each point already created
-        if (p.distTo(this.coordP[j]) < this.size.w / 40) { // If new point too close
+        if (this.twoPointsTooClose(p, this.coordP[j])) {
           valid = false; // No valid anymore
           break;
         }
