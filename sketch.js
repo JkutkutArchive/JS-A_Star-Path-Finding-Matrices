@@ -14,10 +14,11 @@ function setup() {
 
 function draw() {
   background(255);
-
   aStarIterator.next();
-
   network.show(); // draw it
+  if (aStarIterator.done) {
+    noLoop();
+  }
 }
 
 function mousePressed(event) {
