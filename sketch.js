@@ -2,7 +2,7 @@ var network;
 
 var aStarIterator;
 
-window.addEventListener("contextmenu", e => e.preventDefault());
+window.addEventListener("contextmenu", (e) => e.preventDefault());
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -16,23 +16,23 @@ function draw() {
   background(255);
 
   aStarIterator.next();
-  
+
   network.show(); // draw it
 }
 
-function mousePressed(event) { // if mouse clicked
+function mousePressed(event) {
+  const RIGHT_CLICK = 2;
   let mousePos = new Point(mouseX, mouseY, -1);
 
-  for (let p of network.coordP) { // for each node of the network
-    if (mousePos.distTo(p) <= 10) { // If mouse inside the node
-      if (event.button === 2 && network.start.index != p.index) { // If right click
-        network.end = p; // Selected is now the end
+  for (let p of network.coordP) {
+    if (mousePos.distTo(p) <= 10) {
+      if (event.button === RIGHT_CLICK && network.start.index != p.index) {
+        network.end = p;
+      } else if (network.end.index != p.index) {
+        network.start = p;
       }
-      else if (network.end.index != p.index) { // If left click
-        network.start = p; // Selected is now the start
-      }
-      aStarIterator = network.aStar(); // Restart the algo
-      loop(); // update the screen      
+      aStarIterator = network.aStar();
+      loop();
       return;
     }
   }
