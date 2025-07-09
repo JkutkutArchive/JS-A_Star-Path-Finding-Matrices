@@ -173,7 +173,8 @@ class Network {
 
     createPoints() {
         this.coordP = [];
-        for(let i = 0; i < this.nodes;){ // Create points
+        let i, consecutiveInvalids;
+        for(i = 0, consecutiveInvalids = 0; i < this.nodes && consecutiveInvalids < this.nodes;){ // Create points
             let x = Math.floor(random(this.size.w - 100)) + 50;
             let y = Math.floor(random(this.size.h - 100)) + 50;
             let p = new Point(x, y, i);
@@ -187,8 +188,14 @@ class Network {
             if(valid){ // If valid location for a point
                 this.coordP.push(p);
                 i++;
+                consecutiveInvalids = 0;
+            }
+            else {
+              consecutiveInvalids++;
             }
           }
+      this.coordP.splice(i, this.coordP.length - i - 1);
+      this.nodes = this.coordP.length;
     }
 
     createCloseRelations() {
