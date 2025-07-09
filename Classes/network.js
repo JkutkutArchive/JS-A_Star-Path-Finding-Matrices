@@ -1,5 +1,6 @@
 class Network {
   static PADDING = 50;
+  static HIT_BOX = 40;
 
   constructor(canvasWidth, canvasHeight) {
     this.size = { w: canvasWidth, h: canvasHeight };
@@ -190,7 +191,7 @@ class Network {
   }
 
   twoPointsTooClose(p1, p2) {
-    return p1.distTo(p2) < 40;
+    return p1.distTo(p2) < Network.HIT_BOX;
   }
 
   createPoints() {

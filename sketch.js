@@ -25,7 +25,7 @@ function mousePressed(event) {
   let mousePos = new Point(mouseX, mouseY, -1);
 
   for (let p of network.coordP) {
-    if (mousePos.distTo(p) <= 10) {
+    if (mousePos.distTo(p) <= Network.HIT_BOX >> 1) {
       if (event.button === RIGHT_CLICK && network.start.index != p.index) {
         network.end = p;
       } else if (network.end.index != p.index) {
